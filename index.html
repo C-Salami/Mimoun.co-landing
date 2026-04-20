@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mimoun — Procurement, simplified.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,144,300..500;1,144,300..400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#1E5631;
+    --teal:#4C9A8A;
+    --sky:#3A7CA5;
+    --slate:#5B7B99;
+    --mint:#7DBAAE;
+    --approved:#2A7B5E;
+    --pending:#D49A3E;
+    --refused:#B23A3A;
+    --bg:#FFFFFF;
+    --card:#F7F9F8;
+    --text:#111514;
+    --muted:#4A5753;
+    --line:#DDE3E0;
+    --line-soft:#EAEEEC;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-weight:430;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em;line-height:1.5}
+  button,a.btn{font-family:inherit;color:inherit;cursor:pointer;background:none;border:none;padding:0;text-decoration:none}
+  a{text-decoration:none;color:inherit}
+
+  .container{max-width:1160px;margin:0 auto;padding:0 32px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--line-soft)}
+  header .container{display:flex;align-items:center;justify-content:space-between;padding-top:18px;padding-bottom:18px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo img{height:28px;display:block}
+  .nav-links{display:flex;gap:28px;font-size:13px;color:var(--muted)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--text)}
+  @media (max-width:740px){.nav-links{display:none}}
+
+  /* Buttons */
+  .btn{font-size:13px;font-weight:500;padding:10px 20px;border-radius:999px;border:1px solid transparent;transition:all .18s ease;letter-spacing:.005em;display:inline-flex;align-items:center;gap:8px;line-height:1.2}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn.primary:hover{background:#164625;transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,86,49,.22)}
+  .btn.ghost{border-color:var(--line);color:var(--text)}
+  .btn.ghost:hover{border-color:var(--text);background:var(--card)}
+  .btn.lg{font-size:14px;padding:14px 28px}
+
+  /* Hero */
+  .hero{padding:72px 0 96px;position:relative;overflow:hidden}
+  .hero .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+  @media (max-width:900px){.hero .grid{grid-template-columns:1fr;gap:48px}}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--brand);background:rgba(76,154,138,.1);border:1px solid rgba(76,154,138,.2);padding:5px 12px;border-radius:999px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:28px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  h1.hook{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(40px,5.8vw,72px);line-height:1.03;letter-spacing:-0.035em;margin:0 0 24px;color:var(--text)}
+  h1.hook em{font-style:italic;color:var(--brand);font-weight:400}
+  .sub{font-size:17px;color:var(--muted);max-width:540px;line-height:1.55;margin:0 0 36px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .cta-foot{margin-top:16px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+
+  /* Hero UI preview */
+  .ui-preview{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px -30px rgba(17,21,20,.2),0 8px 24px -8px rgba(17,21,20,.08);padding:18px;overflow:hidden}
+  .ui-bar{display:flex;align-items:center;gap:6px;padding:0 4px 14px;border-bottom:1px solid var(--line-soft)}
+  .ui-bar i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+  .ui-title{margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .ui-body{padding:16px 4px 4px}
+  .ui-row{display:grid;grid-template-columns:80px 1fr 80px 72px;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--line-soft);font-size:12px;opacity:0;animation:rowIn .6s forwards}
+  .ui-row:nth-child(1){animation-delay:.1s}
+  .ui-row:nth-child(2){animation-delay:.25s}
+  .ui-row:nth-child(3){animation-delay:.4s}
+  .ui-row:nth-child(4){animation-delay:.55s}
+  @keyframes rowIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .ui-row .id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .ui-row .nm{color:var(--text);font-weight:500}
+  .ui-row .am{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text)}
+  .ui-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:500;letter-spacing:.02em;justify-self:start}
+  .ui-badge::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
+  .ui-badge.ok{background:rgba(42,123,94,.1);color:var(--approved)}
+  .ui-badge.pd{background:rgba(212,154,62,.12);color:var(--pending)}
+  .ui-badge.dr{background:rgba(91,123,153,.1);color:var(--slate)}
+  .ui-footer-note{margin-top:16px;padding:12px 14px;background:var(--card);border:1px solid var(--line-soft);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic}
+
+  /* Section shared */
+  section.block{padding:88px 0;border-top:1px solid var(--line-soft)}
+  .section-kicker{font-size:11px;color:var(--teal);letter-spacing:.16em;text-transform:uppercase;font-weight:500;margin-bottom:14px;text-align:center}
+  .section-title{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,3.8vw,46px);line-height:1.1;letter-spacing:-0.02em;text-align:center;margin:0 auto 16px;max-width:760px}
+  .section-title em{font-style:italic;color:var(--brand)}
+  .section-sub{font-size:15px;color:var(--muted);text-align:center;max-width:580px;margin:0 auto 56px;line-height:1.55}
+
+  /* Problem */
+  .problem-list{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:960px;margin:0 auto}
+  @media (max-width:820px){.problem-list{grid-template-columns:1fr}}
+  .problem-card{padding:28px 24px;border:1px solid var(--line-soft);border-radius:12px;background:#fff;transition:all .2s ease}
+  .problem-card:hover{border-color:var(--line);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(17,21,20,.08)}
+  .problem-card .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.1em;margin-bottom:10px}
+  .problem-card h3{font-family:'Fraunces',serif;font-weight:400;font-size:20px;letter-spacing:-0.01em;margin:0 0 10px;color:var(--text)}
+  .problem-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}
+
+  /* Pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line-soft);border-radius:14px;overflow:hidden;max-width:1080px;margin:0 auto;border:1px solid var(--line-soft)}
+  @media (max-width:900px){.pillars{grid-template-columns:1fr}}
+  .pillar{background:#fff;padding:40px 32px;transition:background .2s ease}
+  .pillar:hover{background:var(--card)}
+  .pillar .icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+  .pillar.p1 .icon{background:rgba(30,86,49,.08);color:var(--brand)}
+  .pillar.p2 .icon{background:rgba(58,124,165,.08);color:var(--sky)}
+  .pillar.p3 .icon{background:rgba(91,123,153,.1);color:var(--slate)}
+  .pillar h3{font-family:'Fraunces',serif;font-weight:400;font-size:22px;letter-spacing:-0.01em;margin:0 0 12px}
+  .pillar p{font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 20px}
+  .pillar .mini{font-size:11px;color:var(--text);font-family:'JetBrains Mono',monospace;padding:12px;background:var(--card);border-radius:8px;border:1px solid var(--line-soft);line-height:1.6}
+  .pillar .mini .k{color:var(--muted)}
+  .pillar .mini .v{color:var(--text)}
+  .pillar .mini .g{color:var(--approved)}
+  .pillar .mini .s{color:var(--sky)}
+
+  /* Built for (same pillars grid, no mini blocks) */
+  .pillar .icon.industry{font-size:14px;background:none;border:1px solid var(--line-soft)}
+
+  /* Interactive demo */
+  .demo-wrap{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:stretch}
+  @media (max-width:900px){.demo-wrap{grid-template-columns:1fr}}
+  .demo-steps{display:flex;flex-direction:column;gap:6px}
+  .demo-step{padding:18px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .2s;opacity:.55}
+  .demo-step:hover{opacity:.85}
+  .demo-step.active{opacity:1;background:var(--card);border-color:var(--line-soft);box-shadow:inset 3px 0 0 var(--teal)}
+  .demo-step .sn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.08em;margin-bottom:4px}
+  .demo-step h4{margin:0 0 6px;font-size:15px;font-weight:500;color:var(--text);letter-spacing:-0.005em}
+  .demo-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.55}
+  .demo-canvas{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-height:320px;position:relative;box-shadow:0 16px 44px -20px rgba(17,21,20,.18)}
+  .ghost-cursor{position:absolute;width:14px;height:14px;border:2px solid var(--brand);border-radius:50%;pointer-events:none;transition:all .7s cubic-bezier(.6,.15,.2,1);z-index:3;background:rgba(255,255,255,.7)}
+  .ghost-cursor::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(76,154,138,.3);animation:pulse 1.4s infinite}
+  .demo-canvas .panel{opacity:0;transition:opacity .3s}
+  .demo-canvas .panel.on{opacity:1}
+  .demo-canvas .panel{position:absolute;inset:20px 22px}
+  .demo-canvas h5{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:0 0 16px;font-weight:500}
+  .dc-field{padding:10px 12px;border:1px solid var(--line-soft);border-radius:8px;font-size:12px;margin-bottom:8px;background:var(--card)}
+  .dc-field .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+  .dc-field .val{color:var(--text);font-weight:500}
+  .dc-field.focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(76,154,138,.08)}
+  .suggestion{margin-top:14px;padding:10px 12px;border-left:2px solid var(--teal);background:rgba(76,154,138,.05);font-size:12px;color:var(--text);border-radius:0 8px 8px 0}
+  .suggestion strong{color:var(--brand)}
+
+  /* Where we are */
+  .status-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;max-width:760px;margin:0 auto 48px}
+  @media (max-width:640px){.status-cols{grid-template-columns:1fr;gap:32px}}
+  .status-col h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 16px}
+  .status-col ul{margin:0;padding:0;list-style:none}
+  .status-col ul li{font-size:14px;color:var(--muted);line-height:1.7;padding-left:16px;position:relative}
+  .status-col ul li::before{content:"·";position:absolute;left:0;color:var(--teal)}
+  .pull-quote{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:20px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto;letter-spacing:-0.01em}
+
+  /* Closing CTA */
+  .closing{padding:110px 0;text-align:center;background:linear-gradient(180deg, #fff, var(--card))}
+  .closing h2{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(36px,5vw,58px);line-height:1.05;letter-spacing:-0.025em;max-width:720px;margin:0 auto 20px}
+  .closing h2 em{font-style:italic;color:var(--brand)}
+  .closing p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto 36px;line-height:1.55}
+  .closing-actions{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .closing-email{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .closing-email a{color:var(--muted);transition:color .15s}
+  .closing-email a:hover{color:var(--text)}
+
+  /* Footer */
+  footer{padding:44px 0 32px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--muted)}
+  footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  footer .flinks{display:flex;gap:20px}
+  footer a{color:var(--muted);transition:color .15s}
+  footer a:hover{color:var(--text)}
+
+  /* Global transitions */
+  a,button{transition:transform .18s ease,color .18s ease,border-color .18s ease,background-color .18s ease}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">
+      <img src="assets/mimoun-logo.png" height="28" alt="Mimoun" />
+    </div>
+    <nav class="nav-links">
+      <a href="#pillars">Product</a>
+      <a href="#how">How it works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary">Book a demo</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>PRE-SEED · CASABLANCA · 2026</div>
+      <h1 class="hook">Procurement,<br><em>simplified.</em></h1>
+      <p class="sub">Turn everyday purchasing chaos into a structured, auditable flow. Every request captured, every approval routed, every purchase order issued — without the spreadsheet marathon.</p>
+      <div class="hero-cta">
+        <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">Book a demo →</a>
+        <a href="#how" class="btn ghost lg">See how it works</a>
+      </div>
+      <div class="cta-foot">20-MIN CONVERSATION · NO CREDIT CARD</div>
+    </div>
+
+    <div class="ui-preview">
+      <div class="ui-bar"><i></i><i></i><i></i><span class="ui-title">mimoun.app / purchase-requests</span></div>
+      <div class="ui-body">
+        <div class="ui-row">
+          <div class="id">PR-0412</div>
+          <div class="nm">Rebar 12mm (2t)</div>
+          <span class="ui-badge ok">Approved</span>
+          <div class="am">48,200 MAD</div>
+        </div>
+        <div class="ui-row">
+          <div class="id">PR-0413</div>
+          <div class="nm">Argan oil, raw</div>
+          <span class="ui-badge pd">Pending</span>
+          <div class="am">22,400 MAD</div>
+        </div>
+        <div class="ui-row">
+          <div class="id">PR-0414</div>
+          <div class="nm">Packaging, 500u</div>
+          <span class="ui-badge ok">Approved</span>
+          <div class="am">8,900 MAD</div>
+        </div>
+        <div class="ui-row">
+          <div class="id">PR-0415</div>
+          <div class="nm">Cement CPJ-45</div>
+          <span class="ui-badge dr">Draft</span>
+          <div class="am">31,000 MAD</div>
+        </div>
+        <div class="ui-footer-note">Every request flows through the same structure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="block">
+  <div class="container">
+    <div class="section-kicker">THE PROBLEM</div>
+    <h2 class="section-title">Most teams run procurement on <em>memory.</em></h2>
+    <p class="section-sub">Requests live in chat threads. Approvals happen verbally. Budgets reconcile at month-end, if at all.</p>
+    <div class="problem-list">
+      <div class="problem-card">
+        <div class="num">01</div>
+        <h3>Requests lost in threads</h3>
+        <p>Critical purchases buried under operational noise. No ID, no history, no one accountable.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">02</div>
+        <h3>No approval trail</h3>
+        <p>Verbal OKs. No audit. Impossible to reconstruct who said yes to what.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">03</div>
+        <h3>Zero spend visibility</h3>
+        <p>Nobody can answer "where did the budget go" without a spreadsheet marathon.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="block" id="pillars">
+  <div class="container">
+    <div class="section-kicker">THE SOLUTION</div>
+    <h2 class="section-title">One flow. <em>From request to PO.</em></h2>
+    <p class="section-sub">Mimoun structures every purchase request, routes it through approvals, and issues the PO. Your team keeps working the way they already do.</p>
+
+    <div class="pillars">
+      <div class="pillar p1">
+        <div class="icon">01</div>
+        <h3>Structured capture</h3>
+        <p>Every request comes in with the fields you need: item, quantity, supplier, budget, urgency. Typed, spoken, or photographed.</p>
+        <div class="mini">
+          <div><span class="k">Requests this month</span> &nbsp; <span class="v">214</span></div>
+          <div><span class="k">Auto-structured</span> &nbsp; <span class="g">98%</span></div>
+          <div><span class="k">Missing fields</span> &nbsp; <span class="v">2 ↓</span></div>
+        </div>
+      </div>
+
+      <div class="pillar p2">
+        <div class="icon">02</div>
+        <h3>Routed approvals</h3>
+        <p>Approval chains you configure once, applied every time. Notifications that don't get buried. A one-tap decision with a full trail.</p>
+        <div class="mini">
+          <div><span class="k">Avg. approval time</span> &nbsp; <span class="s">4m 12s</span></div>
+          <div><span class="k">Escalations</span> &nbsp; <span class="v">3</span></div>
+          <div><span class="k">Audit trail</span> &nbsp; <span class="g">complete</span></div>
+        </div>
+      </div>
+
+      <div class="pillar p3">
+        <div class="icon">03</div>
+        <h3>Automatic POs</h3>
+        <p>Once approved, the purchase order is generated, sent to the supplier, and logged. No Word templates, no lost emails.</p>
+        <div class="mini">
+          <div><span class="k">POs issued</span> &nbsp; <span class="v">198</span></div>
+          <div><span class="k">Delivery rate</span> &nbsp; <span class="g">100%</span></div>
+          <div><span class="k">Supplier lead</span> &nbsp; <span class="s">6d avg</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section class="block" id="how">
+  <div class="container">
+    <div class="section-kicker">SEE IT IN ACTION</div>
+    <h2 class="section-title">From request to PO in <em>under a minute.</em></h2>
+    <p class="section-sub">Hover or tap a step to see how Mimoun moves from capture to confirmed order.</p>
+
+    <div class="demo-wrap">
+      <div class="demo-steps">
+        <div class="demo-step active" data-step="1">
+          <div class="sn">STEP 01</div>
+          <h4>Capture the request</h4>
+          <p>A team member describes what they need. Fields are extracted automatically — no forms to fill.</p>
+        </div>
+        <div class="demo-step" data-step="2">
+          <div class="sn">STEP 02</div>
+          <h4>Route the approval</h4>
+          <p>Mimoun applies your approval policy and notifies the right person. One tap, full trail.</p>
+        </div>
+        <div class="demo-step" data-step="3">
+          <div class="sn">STEP 03</div>
+          <h4>Issue the PO</h4>
+          <p>Approval received. Purchase order generated, sent to the supplier, and logged to the dashboard.</p>
+        </div>
+      </div>
+
+      <div class="demo-canvas">
+        <div class="ghost-cursor" id="ghost"></div>
+
+        <div class="panel on" data-panel="1">
+          <h5>New request</h5>
+          <div class="dc-field focus"><div class="lbl">Item</div><div class="val">Rebar 12mm, 2 tonnes</div></div>
+          <div class="dc-field"><div class="lbl">Supplier</div><div class="val">Atlas Metalworks</div></div>
+          <div class="dc-field"><div class="lbl">Budget</div><div class="val">48,000 MAD</div></div>
+          <div class="suggestion"><strong>Mimoun:</strong> request structured. Route to approver?</div>
+        </div>
+
+        <div class="panel" data-panel="2">
+          <h5>Approval · pending</h5>
+          <div class="dc-field"><div class="lbl">Policy</div><div class="val">Materials · over 30k MAD</div></div>
+          <div class="dc-field"><div class="lbl">Approver</div><div class="val">M. Sbaai · Ops Manager</div></div>
+          <div class="dc-field focus"><div class="lbl">Status</div><div class="val">Awaiting decision · 1m 08s</div></div>
+          <div class="suggestion"><strong>Mimoun:</strong> approver notified. Awaiting response.</div>
+        </div>
+
+        <div class="panel" data-panel="3">
+          <h5>PO issued</h5>
+          <div class="dc-field"><div class="lbl">PO number</div><div class="val">PO-2026-0412</div></div>
+          <div class="dc-field"><div class="lbl">Sent to</div><div class="val">contact@atlas-metal.ma</div></div>
+          <div class="dc-field focus"><div class="lbl">Status</div><div class="val" style="color:var(--approved)">✓ Confirmed by supplier</div></div>
+          <div class="suggestion"><strong>Mimoun:</strong> PO logged. Lead time 6 days.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILT FOR -->
+<section class="block" style="background:var(--card)">
+  <div class="container">
+    <div class="section-kicker">BUILT FOR</div>
+    <h2 class="section-title">Teams where purchasing happens <em>every day.</em></h2>
+    <p class="section-sub">Operations-heavy companies where requests outpace the tools used to manage them.</p>
+
+    <div class="pillars">
+      <div class="pillar p1">
+        <div class="icon">BTP</div>
+        <h3>Construction</h3>
+        <p>Materials, equipment rentals, subcontractor services — tracked per jobsite, per line.</p>
+      </div>
+      <div class="pillar p2">
+        <div class="icon">H&amp;R</div>
+        <h3>Hospitality</h3>
+        <p>F&amp;B orders, housekeeping supplies, maintenance requests — one flow across departments.</p>
+      </div>
+      <div class="pillar p3">
+        <div class="icon">IND</div>
+        <h3>Manufacturing</h3>
+        <p>Raw materials, packaging, indirect spend — structured, approved, auditable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE WE ARE -->
+<section class="block">
+  <div class="container">
+    <div class="section-kicker">WHERE WE ARE</div>
+    <h2 class="section-title">Pre-seed. <em>Working product.</em> Pilots open.</h2>
+    <p class="section-sub">We're being transparent: no customer reviews to show yet. What we have is a working product and an open door.</p>
+
+    <div class="status-cols">
+      <div class="status-col">
+        <h4>Done</h4>
+        <ul>
+          <li>Working MVP — capture, approvals, PO generation</li>
+          <li>Multilingual — French, Arabic, Darija</li>
+          <li>Demo environments for construction and hospitality</li>
+        </ul>
+      </div>
+      <div class="status-col">
+        <h4>In progress</h4>
+        <ul>
+          <li>First pilot conversations</li>
+          <li>Procurement specialist interviews</li>
+          <li>Next: five paying pilots in six months</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="pull-quote">"We'd rather show you the product than a slide of fake logos."</p>
+  </div>
+</section>
+
+<!-- CLOSING CTA -->
+<section class="closing" id="contact">
+  <div class="container">
+    <h2>Twenty minutes. <em>No slides.</em></h2>
+    <p>The fastest way to see if Mimoun fits is a short call where we walk through the product with your own use case in mind.</p>
+    <div class="closing-actions">
+      <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">Book a demo →</a>
+      <div class="closing-email">OR EMAIL — <a href="mailto:contact@mimoun.co">CONTACT@MIMOUN.CO</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div>© 2026 Mimoun · Casablanca, Morocco</div>
+    <div class="flinks">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="mailto:contact@mimoun.co">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Interactive demo ghost cursor
+const steps = document.querySelectorAll('.demo-step');
+const panels = document.querySelectorAll('.demo-canvas .panel');
+const ghost = document.getElementById('ghost');
+const targets = {1:{x:40,y:60}, 2:{x:60,y:140}, 3:{x:50,y:190}};
+
+function showStep(n){
+  steps.forEach(s=>s.classList.toggle('active', s.dataset.step===String(n)));
+  panels.forEach(p=>p.classList.toggle('on', p.dataset.panel===String(n)));
+  const t = targets[n] || {x:40,y:60};
+  ghost.style.left = t.x+'px';
+  ghost.style.top = t.y+'px';
+}
+steps.forEach(s=>{
+  s.addEventListener('mouseenter', ()=>showStep(Number(s.dataset.step)));
+  s.addEventListener('click', ()=>showStep(Number(s.dataset.step)));
+});
+let auto = 1;
+setInterval(()=>{ auto = auto >= 3 ? 1 : auto + 1; showStep(auto); }, 4000);
+showStep(1);
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); window.scrollTo({top: t.offsetTop - 60, behavior:'smooth'}); }
+  });
+});
+</script>
+</body>
+</html>
