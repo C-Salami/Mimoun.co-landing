@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mimoun — Agentic procurement for modern teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,144,300..500;1,144,300..400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#1E5631;
+    --teal:#4C9A8A;
+    --sky:#3A7CA5;
+    --slate:#5B7B99;
+    --mint:#7DBAAE;
+    --approved:#2A7B5E;
+    --pending:#D49A3E;
+    --refused:#B23A3A;
+    --bg:#FFFFFF;
+    --card:#F7F9F8;
+    --text:#111514;
+    --muted:#4A5753;
+    --line:#DDE3E0;
+    --line-soft:#EAEEEC;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-weight:430;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em;line-height:1.5}
+  button,a.btn{font-family:inherit;color:inherit;cursor:pointer;background:none;border:none;padding:0;text-decoration:none}
+
+  .container{max-width:1160px;margin:0 auto;padding:0 32px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--line-soft)}
+  header .container{display:flex;align-items:center;justify-content:space-between;padding-top:18px;padding-bottom:18px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo svg{height:26px}
+  .logo-word{font-size:15px;font-weight:500;letter-spacing:.04em;color:var(--text)}
+  .nav-links{display:flex;gap:28px;font-size:13px;color:var(--muted)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--text)}
+  @media (max-width:740px){.nav-links{display:none}}
+
+  /* Buttons */
+  .btn{font-size:13px;font-weight:500;padding:10px 20px;border-radius:999px;border:1px solid transparent;transition:all .18s ease;letter-spacing:.005em;display:inline-flex;align-items:center;gap:8px;line-height:1.2}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn.primary:hover{background:#164625;transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,86,49,.22)}
+  .btn.ghost{border-color:var(--line);color:var(--text)}
+  .btn.ghost:hover{border-color:var(--text);background:var(--card)}
+  .btn.lg{font-size:14px;padding:14px 28px}
+
+  /* Hero */
+  .hero{padding:72px 0 96px;position:relative;overflow:hidden}
+  .hero .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+  @media (max-width:900px){.hero .grid{grid-template-columns:1fr;gap:48px}}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--brand);background:rgba(76,154,138,.1);border:1px solid rgba(76,154,138,.2);padding:5px 12px;border-radius:999px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:28px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  h1.hook{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(40px,5.8vw,72px);line-height:1.03;letter-spacing:-0.035em;margin:0 0 24px;color:var(--text)}
+  h1.hook em{font-style:italic;color:var(--brand);font-weight:400}
+  .sub{font-size:17px;color:var(--muted);max-width:540px;line-height:1.55;margin:0 0 36px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .cta-foot{margin-top:16px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+
+  /* Hero UI preview */
+  .ui-preview{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px -30px rgba(17,21,20,.2),0 8px 24px -8px rgba(17,21,20,.08);padding:18px;overflow:hidden}
+  .ui-bar{display:flex;align-items:center;gap:6px;padding:0 4px 14px;border-bottom:1px solid var(--line-soft)}
+  .ui-bar i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+  .ui-title{margin-left:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .ui-body{padding:16px 4px 4px}
+  .ui-row{display:grid;grid-template-columns:90px 1fr 70px 60px;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--line-soft);font-size:12px;opacity:0;animation:rowIn .6s forwards}
+  .ui-row:nth-child(1){animation-delay:.1s}
+  .ui-row:nth-child(2){animation-delay:.25s}
+  .ui-row:nth-child(3){animation-delay:.4s}
+  .ui-row:nth-child(4){animation-delay:.55s}
+  @keyframes rowIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .ui-row .id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+  .ui-row .nm{color:var(--text);font-weight:500}
+  .ui-row .am{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text)}
+  .ui-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:500;letter-spacing:.02em;justify-self:start}
+  .ui-badge::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
+  .ui-badge.ok{background:rgba(42,123,94,.1);color:var(--approved)}
+  .ui-badge.ai{background:rgba(76,154,138,.1);color:var(--brand)}
+  .ui-badge.pd{background:rgba(212,154,62,.12);color:var(--pending)}
+  .ai-banner{margin-top:16px;padding:12px 14px;background:linear-gradient(90deg, rgba(30,86,49,.05), rgba(76,154,138,.06));border:1px solid rgba(76,154,138,.2);border-radius:10px;display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--text);line-height:1.5}
+  .ai-icon{width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+  .ai-banner strong{color:var(--brand);font-weight:600}
+
+  /* Section shared */
+  section.block{padding:88px 0;border-top:1px solid var(--line-soft)}
+  .section-kicker{font-size:11px;color:var(--teal);letter-spacing:.16em;text-transform:uppercase;font-weight:500;margin-bottom:14px;text-align:center}
+  .section-title{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,3.8vw,46px);line-height:1.1;letter-spacing:-0.02em;text-align:center;margin:0 auto 16px;max-width:760px}
+  .section-title em{font-style:italic;color:var(--brand)}
+  .section-sub{font-size:15px;color:var(--muted);text-align:center;max-width:580px;margin:0 auto 56px;line-height:1.55}
+
+  /* Social proof */
+  .logos-strip{padding:44px 0;background:var(--card);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .logos-strip .label{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;text-align:center;margin-bottom:24px;font-weight:500}
+  .logos-row{display:flex;justify-content:center;align-items:center;gap:56px;flex-wrap:wrap;opacity:.72}
+  .logos-row .ll{font-family:'Fraunces',serif;font-style:italic;font-size:20px;color:var(--muted);letter-spacing:-0.01em}
+  .logos-row .lm{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted);letter-spacing:.04em}
+  .logos-row .ls{font-family:'Inter';font-weight:500;font-size:16px;color:var(--muted);letter-spacing:.08em}
+  .impact-stat{margin-top:36px;text-align:center;font-size:14px;color:var(--text)}
+  .impact-stat strong{color:var(--brand);font-family:'Fraunces',serif;font-weight:400;font-size:22px;font-style:italic}
+
+  /* Problem */
+  .problem-list{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:960px;margin:0 auto}
+  @media (max-width:820px){.problem-list{grid-template-columns:1fr}}
+  .problem-card{padding:28px 24px;border:1px solid var(--line-soft);border-radius:12px;background:#fff;transition:all .2s ease}
+  .problem-card:hover{border-color:var(--line);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(17,21,20,.08)}
+  .problem-card .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.1em;margin-bottom:10px}
+  .problem-card h3{font-family:'Fraunces',serif;font-weight:400;font-size:20px;letter-spacing:-0.01em;margin:0 0 10px;color:var(--text)}
+  .problem-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}
+
+  /* Pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line-soft);border-radius:14px;overflow:hidden;max-width:1080px;margin:0 auto;border:1px solid var(--line-soft)}
+  @media (max-width:900px){.pillars{grid-template-columns:1fr}}
+  .pillar{background:#fff;padding:40px 32px;transition:background .2s ease}
+  .pillar:hover{background:var(--card)}
+  .pillar .icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+  .pillar.p1 .icon{background:rgba(30,86,49,.08);color:var(--brand)}
+  .pillar.p2 .icon{background:rgba(58,124,165,.08);color:var(--sky)}
+  .pillar.p3 .icon{background:rgba(91,123,153,.1);color:var(--slate)}
+  .pillar h3{font-family:'Fraunces',serif;font-weight:400;font-size:22px;letter-spacing:-0.01em;margin:0 0 12px}
+  .pillar p{font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 20px}
+  .pillar .mini{font-size:11px;color:var(--text);font-family:'JetBrains Mono',monospace;padding:12px;background:var(--card);border-radius:8px;border:1px solid var(--line-soft);line-height:1.6}
+  .pillar .mini .k{color:var(--muted)}
+  .pillar .mini .v{color:var(--text)}
+  .pillar .mini .g{color:var(--approved)}
+  .pillar .mini .s{color:var(--sky)}
+
+  /* Interactive demo */
+  .demo-wrap{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:stretch}
+  @media (max-width:900px){.demo-wrap{grid-template-columns:1fr}}
+  .demo-steps{display:flex;flex-direction:column;gap:6px}
+  .demo-step{padding:18px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .2s;opacity:.55}
+  .demo-step:hover{opacity:.85}
+  .demo-step.active{opacity:1;background:var(--card);border-color:var(--line-soft);box-shadow:inset 3px 0 0 var(--teal)}
+  .demo-step .sn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.08em;margin-bottom:4px}
+  .demo-step h4{margin:0 0 6px;font-size:15px;font-weight:500;color:var(--text);letter-spacing:-0.005em}
+  .demo-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.55}
+  .demo-canvas{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-height:360px;position:relative;box-shadow:0 16px 44px -20px rgba(17,21,20,.18)}
+  .ghost-cursor{position:absolute;width:14px;height:14px;border:2px solid var(--brand);border-radius:50%;pointer-events:none;transition:all .7s cubic-bezier(.6,.15,.2,1);z-index:3;background:rgba(255,255,255,.7)}
+  .ghost-cursor::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(76,154,138,.3);animation:pulse 1.4s infinite}
+  .demo-canvas .panel{opacity:0;transition:opacity .3s}
+  .demo-canvas .panel.on{opacity:1}
+  .demo-canvas .panel{position:absolute;inset:20px 22px}
+  .demo-canvas h5{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:0 0 16px;font-weight:500}
+  .dc-field{padding:10px 12px;border:1px solid var(--line-soft);border-radius:8px;font-size:12px;margin-bottom:8px;background:var(--card)}
+  .dc-field .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+  .dc-field .val{color:var(--text);font-weight:500}
+  .dc-field.focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(76,154,138,.08)}
+  .ai-suggestion{margin-top:14px;padding:10px 12px;border-left:2px solid var(--teal);background:rgba(76,154,138,.05);font-size:12px;color:var(--text);border-radius:0 8px 8px 0}
+  .ai-suggestion strong{color:var(--brand)}
+
+  /* ROI */
+  .roi-card{max-width:720px;margin:0 auto;padding:44px 44px 40px;background:linear-gradient(180deg, var(--card), #fff);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 44px -20px rgba(17,21,20,.1)}
+  .roi-slider-row{margin-bottom:28px}
+  .roi-slider-row .lbl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .roi-slider-row .lbl span:first-child{font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;font-weight:500;letter-spacing:.1em}
+  .roi-slider-row .lbl .val{font-family:'Fraunces',serif;font-size:28px;font-weight:400;color:var(--text);letter-spacing:-0.01em}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--line-soft);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--brand);cursor:pointer;box-shadow:0 2px 6px rgba(17,21,20,.15);transition:transform .15s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.1)}
+  input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--brand);cursor:pointer}
+  .roi-out{margin-top:32px;padding-top:28px;border-top:1px solid var(--line-soft);display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:center}
+  @media (max-width:540px){.roi-out{grid-template-columns:1fr}}
+  .roi-out .metric .lbl{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+  .roi-out .metric .v{font-family:'Fraunces',serif;font-weight:300;font-size:42px;color:var(--brand);letter-spacing:-0.02em;line-height:1}
+  .roi-out .metric .v em{font-style:italic}
+  .roi-out .metric .sm{font-size:11px;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace}
+
+  /* Testimonials */
+  .tests{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1040px;margin:0 auto}
+  @media (max-width:820px){.tests{grid-template-columns:1fr}}
+  .tst{padding:28px 26px;border:1px solid var(--line-soft);border-radius:12px;background:#fff;transition:all .2s}
+  .tst:hover{border-color:var(--line);transform:translateY(-2px)}
+  .tst blockquote{margin:0 0 20px;font-family:'Fraunces',serif;font-weight:300;font-style:italic;font-size:18px;line-height:1.45;color:var(--text);letter-spacing:-0.005em}
+  .tst .who{display:flex;align-items:center;gap:12px}
+  .tst .av{width:36px;height:36px;border-radius:50%;background:var(--card);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;letter-spacing:.02em;border:1px solid var(--line)}
+  .tst .meta .n{font-size:13px;font-weight:500;color:var(--text)}
+  .tst .meta .r{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px}
+
+  /* Security */
+  .security{padding:44px 0;text-align:center;background:var(--card);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .security .label{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-weight:500;margin-bottom:20px}
+  .badges{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;align-items:center}
+  .badge-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text);font-weight:500;letter-spacing:.02em}
+  .badge-item svg{width:20px;height:20px;color:var(--teal)}
+
+  /* Closing CTA */
+  .closing{padding:110px 0;text-align:center;background:linear-gradient(180deg, #fff, var(--card))}
+  .closing h2{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(36px,5vw,58px);line-height:1.05;letter-spacing:-0.025em;max-width:720px;margin:0 auto 20px}
+  .closing h2 em{font-style:italic;color:var(--brand)}
+  .closing p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto 36px;line-height:1.55}
+  .closing-form{max-width:460px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px;box-shadow:0 24px 60px -30px rgba(17,21,20,.18);text-align:left}
+  .form-step{display:none}
+  .form-step.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .form-step h4{margin:0 0 6px;font-size:14px;font-weight:500;color:var(--text)}
+  .form-step .hint{font-size:12px;color:var(--muted);margin:0 0 18px}
+  .form-step .progress{display:flex;gap:4px;margin-bottom:18px}
+  .form-step .progress i{height:3px;flex:1;background:var(--line-soft);border-radius:2px}
+  .form-step .progress i.on{background:var(--teal)}
+  .form-step .spend-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .spend-opt{padding:12px;border:1px solid var(--line);border-radius:8px;font-size:12px;color:var(--text);cursor:pointer;text-align:center;transition:all .15s;background:#fff}
+  .spend-opt:hover{border-color:var(--teal);background:rgba(76,154,138,.04)}
+  .spend-opt.sel{border-color:var(--brand);background:rgba(30,86,49,.04);font-weight:500}
+  .form-step input[type=email],.form-step input[type=text]{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;color:var(--text);outline:none;margin-bottom:10px;transition:border-color .15s}
+  .form-step input:focus{border-color:var(--teal)}
+  .form-actions{display:flex;gap:8px;margin-top:14px}
+  .form-actions .back{color:var(--muted);font-size:12px;padding:10px 14px;cursor:pointer}
+  .form-actions .back:hover{color:var(--text)}
+
+  .dual-cta{display:flex;gap:14px;justify-content:center;margin-bottom:28px;flex-wrap:wrap}
+  .tiny{font-size:11px;color:var(--muted);margin-top:20px;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+
+  /* Footer */
+  footer{padding:44px 0 32px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--muted)}
+  footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  footer .flinks{display:flex;gap:20px}
+  footer a{color:var(--muted);transition:color .15s}
+  footer a:hover{color:var(--text)}
+
+  /* Hover emphasis */
+  a, button { transition: transform .18s ease, color .18s ease, border-color .18s ease, background-color .18s ease; }
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail" data-bg-color="#FFFFFF">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#FFFFFF"/>
+    <g transform="translate(540 260)" fill="#1E5631">
+      <polygon points="2,240 2,20 70,20 70,70 40,90 40,240"/>
+      <polygon points="70,20 110,20 110,110 70,70"/>
+      <polygon points="110,20 150,20 160,120 110,110"/>
+      <polygon points="170,20 210,20 210,110 160,120"/>
+      <polygon points="210,20 250,20 250,70 210,110"/>
+      <polygon points="250,20 318,20 318,240 288,240 288,90 250,70"/>
+      <rect x="2" y="220" width="60" height="20"/>
+      <rect x="258" y="220" width="60" height="20"/>
+    </g>
+    <text x="600" y="610" font-family="Georgia, serif" font-style="italic" font-size="32" font-weight="300" fill="#111514" text-anchor="middle">From cost center to growth engine.</text>
+    <text x="600" y="660" font-family="monospace" font-size="13" fill="#4A5753" text-anchor="middle" letter-spacing="4">MIMOUN · PROCUREMENT</text>
+  </svg>
+</template>
+
+<header>
+  <div class="container">
+    <div class="logo">
+      <svg viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg" fill="#1E5631">
+        <polygon points="2,46 2,4 14,4 14,14 8,18 8,46"/>
+        <polygon points="14,4 22,4 22,22 14,14"/>
+        <polygon points="22,4 30,4 32,24 22,22"/>
+        <polygon points="34,4 42,4 42,22 32,24"/>
+        <polygon points="42,4 50,4 50,14 42,22"/>
+        <polygon points="50,4 62,4 62,46 56,46 56,18 50,14"/>
+        <rect x="2" y="42" width="12" height="4"/>
+        <rect x="50" y="42" width="12" height="4"/>
+      </svg>
+      <span class="logo-word">MIMOUN</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#pillars">Platform</a>
+      <a href="#demo">How it works</a>
+      <a href="#roi">ROI</a>
+      <a href="#security">Security</a>
+    </nav>
+    <a href="#cta" class="btn primary">Book Demo</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Agentic Procurement · Live</div>
+      <h1 class="hook">From cost center<br/>to <em>growth engine.</em></h1>
+      <p class="sub">Automate 80% of your tail spend and supplier onboarding with autonomous agents that negotiate, match invoices, and track ESG while you sleep.</p>
+      <div class="hero-cta">
+        <a href="#cta" class="btn primary lg">Schedule a 15-Min Strategy Session →</a>
+        <a href="#demo" class="btn ghost lg">Talk to a Sourcing Expert</a>
+      </div>
+      <div class="cta-foot">No credit card · 18% avg. cost reduction in 90 days</div>
+    </div>
+
+    <div class="ui-preview">
+      <div class="ui-bar"><i></i><i></i><i></i><span class="ui-title">mimoun.app / purchase-orders</span></div>
+      <div class="ui-body">
+        <div class="ui-row"><div class="id">PO 0184</div><div class="nm">Atlas Metalworks</div><span class="ui-badge ok">Auto-approved</span><div class="am">€ 2,030</div></div>
+        <div class="ui-row"><div class="id">PO 0183</div><div class="nm">Helios Industrial</div><span class="ui-badge ai">Agent negotiating</span><div class="am">€ 1,120</div></div>
+        <div class="ui-row"><div class="id">PO 0182</div><div class="nm">Northwind Logistics</div><span class="ui-badge ok">Auto-approved</span><div class="am">€ 1,540</div></div>
+        <div class="ui-row"><div class="id">PO 0181</div><div class="nm">Ravello Foods</div><span class="ui-badge pd">OCR match</span><div class="am">€ 380</div></div>
+        <div class="ai-banner">
+          <div class="ai-icon">AI</div>
+          <div><strong>Agent completed 14 tasks overnight</strong> — 3 POs dispatched, 6 invoices matched, 2 vendors onboarded, 3 price deviations flagged.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="logos-strip">
+  <div class="container">
+    <div class="label">Trusted by procurement teams at</div>
+    <div class="logos-row">
+      <span class="ll">Artemis Foods</span>
+      <span class="lm">NORDGRID</span>
+      <span class="ls">LUMIÈRE</span>
+      <span class="ll">Cedar & Co.</span>
+      <span class="lm">SOLARIX</span>
+      <span class="ls">HELIOS</span>
+    </div>
+    <div class="impact-stat">Average <strong>18% cost reduction</strong> within 90 days for manufacturing firms.</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="block">
+  <div class="container">
+    <div class="section-kicker">The problem</div>
+    <h2 class="section-title">Stop <em>chasing paper.</em></h2>
+    <p class="section-sub">Procurement teams still spend 60% of their week on tasks that shouldn't exist.</p>
+    <div class="problem-list">
+      <div class="problem-card">
+        <div class="num">01</div>
+        <h3>Manual PO juggling</h3>
+        <p>Copy-pasting supplier quotes into an ERP. Chasing approvals on WhatsApp. Rekeying invoices line by line.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">02</div>
+        <h3>Invisible tail spend</h3>
+        <p>30–40% of spend bypasses preferred suppliers. You see it at quarter-close. Usually too late to recover.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">03</div>
+        <h3>ESG &amp; compliance blind spots</h3>
+        <p>Certifications expire. Supplier risk scores drift. Audits become fire drills instead of checkpoints.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="block" id="pillars">
+  <div class="container">
+    <div class="section-kicker">The solution</div>
+    <h2 class="section-title">Three pillars, <em>built for 2026.</em></h2>
+    <p class="section-sub">Mimoun is a procurement platform where autonomous agents, not humans, handle the boring 80%.</p>
+
+    <div class="pillars">
+      <div class="pillar p1">
+        <div class="icon">01</div>
+        <h3>ZeroTouch Processing</h3>
+        <p>Routine POs, three-way matching, and invoice reconciliation run autonomously. Your team only sees the exceptions.</p>
+        <div class="mini">
+          <div><span class="k">POs this month</span> &nbsp; <span class="v">412</span></div>
+          <div><span class="k">Auto-processed</span> &nbsp; <span class="g">81.2%</span></div>
+          <div><span class="k">Human touches</span> &nbsp; <span class="v">78 ↓</span></div>
+        </div>
+      </div>
+
+      <div class="pillar p2">
+        <div class="icon">02</div>
+        <h3>Resilience &amp; ESG</h3>
+        <p>Real-time supplier risk scoring, expiring certificate alerts, and ESG reporting baked into every PO — not a separate module.</p>
+        <div class="mini">
+          <div><span class="k">Scope 3 tracked</span> &nbsp; <span class="s">100%</span></div>
+          <div><span class="k">Cert. expiring 30d</span> &nbsp; <span class="v">4</span></div>
+          <div><span class="k">Risk alerts</span> &nbsp; <span class="s">live</span></div>
+        </div>
+      </div>
+
+      <div class="pillar p3">
+        <div class="icon">03</div>
+        <h3>Predictive Spend</h3>
+        <p>Forecast where your budget will break next month. Agents recommend renegotiation windows, consolidation, and substitute SKUs.</p>
+        <div class="mini">
+          <div><span class="k">Forecast horizon</span> &nbsp; <span class="v">90 days</span></div>
+          <div><span class="k">Confidence band</span> &nbsp; <span class="s">± 4.2%</span></div>
+          <div><span class="k">Save opportunities</span> &nbsp; <span class="g">€ 42.8K</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section class="block" id="demo">
+  <div class="container">
+    <div class="section-kicker">See it in action</div>
+    <h2 class="section-title">Onboard a supplier in <em>3 clicks.</em></h2>
+    <p class="section-sub">Hover or tap a step. The agent walks through it live — the way your team actually works.</p>
+
+    <div class="demo-wrap">
+      <div class="demo-steps">
+        <div class="demo-step active" data-step="1">
+          <div class="sn">STEP 01</div>
+          <h4>Paste the supplier's details</h4>
+          <p>Agent auto-enriches with ICE, address, categories, and payment terms from public registries.</p>
+        </div>
+        <div class="demo-step" data-step="2">
+          <div class="sn">STEP 02</div>
+          <h4>Let the agent vet</h4>
+          <p>Sanctions check, duplicate-supplier match, risk scoring, ESG baseline — all in under 6 seconds.</p>
+        </div>
+        <div class="demo-step" data-step="3">
+          <div class="sn">STEP 03</div>
+          <h4>One-click onboarding</h4>
+          <p>Contract template generated, WhatsApp intro sent to the vendor, supplier added to preferred list.</p>
+        </div>
+      </div>
+
+      <div class="demo-canvas">
+        <div class="ghost-cursor" id="ghost"></div>
+
+        <div class="panel on" data-panel="1">
+          <h5>New Supplier</h5>
+          <div class="dc-field focus"><div class="lbl">Company name</div><div class="val">Atlas Metalworks SARL</div></div>
+          <div class="dc-field"><div class="lbl">Country</div><div class="val">Maroc</div></div>
+          <div class="dc-field"><div class="lbl">Categories</div><div class="val">Raw Materials, Metals</div></div>
+          <div class="ai-suggestion"><strong>Agent:</strong> ICE and RC numbers auto-filled from OMPIC registry. Continue?</div>
+        </div>
+
+        <div class="panel" data-panel="2">
+          <h5>Vetting · 06s</h5>
+          <div class="dc-field"><div class="lbl">Sanctions check</div><div class="val" style="color:var(--approved)">✓ Clear</div></div>
+          <div class="dc-field"><div class="lbl">Duplicate match</div><div class="val" style="color:var(--approved)">✓ Not in system</div></div>
+          <div class="dc-field focus"><div class="lbl">ESG baseline</div><div class="val" style="color:var(--sky)">B+ · Scope 3 available</div></div>
+          <div class="dc-field"><div class="lbl">Risk score</div><div class="val">92 / 100</div></div>
+        </div>
+
+        <div class="panel" data-panel="3">
+          <h5>Onboarding complete</h5>
+          <div class="dc-field"><div class="lbl">Contract</div><div class="val">Generated from template #04</div></div>
+          <div class="dc-field"><div class="lbl">WhatsApp intro</div><div class="val">Sent to +212 522 49 10 20</div></div>
+          <div class="dc-field focus"><div class="lbl">Status</div><div class="val" style="color:var(--approved)">✓ Added to preferred suppliers</div></div>
+          <div class="ai-suggestion"><strong>Agent:</strong> First PR can now be routed here. Estimated lead time 6 days.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROI -->
+<section class="block" id="roi" style="background:var(--card)">
+  <div class="container">
+    <div class="section-kicker">ROI Calculator</div>
+    <h2 class="section-title">Calculate your <em>potential savings.</em></h2>
+    <p class="section-sub">Based on average outcomes across 140+ customers in the last 12 months.</p>
+
+    <div class="roi-card">
+      <div class="roi-slider-row">
+        <div class="lbl"><span>Annual procurement spend</span><span class="val" id="spendVal">€ 5.0M</span></div>
+        <input type="range" id="spendSlider" min="1" max="50" step="1" value="5" />
+      </div>
+      <div class="roi-slider-row">
+        <div class="lbl"><span>Team size</span><span class="val" id="teamVal">8 people</span></div>
+        <input type="range" id="teamSlider" min="2" max="50" step="1" value="8" />
+      </div>
+
+      <div class="roi-out">
+        <div class="metric">
+          <div class="lbl">Estimated cost reduction</div>
+          <div class="v">€ <em id="savings">900K</em></div>
+          <div class="sm">18% of annual spend</div>
+        </div>
+        <div class="metric">
+          <div class="lbl">Hours reclaimed / year</div>
+          <div class="v" id="hours">6,240</div>
+          <div class="sm">~780h per procurement FTE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="block">
+  <div class="container">
+    <div class="section-kicker">What CPOs are saying</div>
+    <h2 class="section-title">Procurement leaders <em>running leaner.</em></h2>
+
+    <div class="tests">
+      <div class="tst">
+        <blockquote>"We cut our tail spend review cycle from two weeks to ninety minutes. The agents caught three maverick contracts in the first month."</blockquote>
+        <div class="who">
+          <div class="av">AR</div>
+          <div class="meta"><div class="n">Amina Rachidi</div><div class="r">CPO · Artemis Foods</div></div>
+        </div>
+      </div>
+      <div class="tst">
+        <blockquote>"Onboarding used to be a three-week marathon. Now a new supplier is live before the kickoff call ends."</blockquote>
+        <div class="who">
+          <div class="av">JB</div>
+          <div class="meta"><div class="n">Jeroen Bakker</div><div class="r">Head of Sourcing · Nordgrid</div></div>
+        </div>
+      </div>
+      <div class="tst">
+        <blockquote>"The predictive spend view is the first tool that actually changed how I plan quarters. It pays for itself in one renegotiation."</blockquote>
+        <div class="who">
+          <div class="av">LF</div>
+          <div class="meta"><div class="n">Lucia Ferrari</div><div class="r">Procurement Director · Ravello</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<div class="security" id="security">
+  <div class="container">
+    <div class="label">Enterprise-grade security &amp; compliance</div>
+    <div class="badges">
+      <div class="badge-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>SOC 2 Type II</div>
+      <div class="badge-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>GDPR compliant</div>
+      <div class="badge-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>ISO 27001</div>
+      <div class="badge-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M4 12h16"/><circle cx="12" cy="12" r="9"/></svg>EU data residency</div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSING CTA -->
+<section class="closing" id="cta">
+  <div class="container">
+    <h2>Take control of your <em>spend today.</em></h2>
+    <p>15 minutes. No pitch deck. Just your data and a working agent on screen.</p>
+
+    <div class="dual-cta">
+      <a href="#" class="btn primary lg">Schedule a Strategy Session →</a>
+      <a href="#" class="btn ghost lg">Talk to a Sourcing Expert</a>
+    </div>
+
+    <div class="closing-form" id="closingForm">
+      <div class="form-step active" data-fs="1">
+        <div class="progress"><i class="on"></i><i></i><i></i></div>
+        <h4>What's your annual spend?</h4>
+        <p class="hint">We'll tailor the session to your scale.</p>
+        <div class="spend-grid">
+          <div class="spend-opt" data-spend="<1M">&lt; €1M</div>
+          <div class="spend-opt" data-spend="1-10M">€1M–10M</div>
+          <div class="spend-opt" data-spend="10-50M">€10M–50M</div>
+          <div class="spend-opt" data-spend=">50M">&gt; €50M</div>
+        </div>
+      </div>
+      <div class="form-step" data-fs="2">
+        <div class="progress"><i class="on"></i><i class="on"></i><i></i></div>
+        <h4>Work email</h4>
+        <p class="hint">No marketing spam — just the session invite.</p>
+        <input type="email" placeholder="you@company.com" id="emailIn" />
+        <div class="form-actions">
+          <div class="back" data-back>← Back</div>
+          <button class="btn primary" id="emailNext">Continue →</button>
+        </div>
+      </div>
+      <div class="form-step" data-fs="3">
+        <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+        <h4>You're in.</h4>
+        <p class="hint">We'll reach out in the next business day with 3 slots that fit your timezone.</p>
+        <div style="padding:20px;background:var(--card);border-radius:8px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;line-height:1.7">
+          <div>✓ Session request received</div>
+          <div>✓ Routed to your regional lead</div>
+          <div>✓ Calendar invite coming shortly</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tiny">Trusted by 140+ procurement teams · 99.9% uptime · EU-hosted</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div>© 2026 Mimoun Procurement · Casablanca · Paris · Amsterdam</div>
+    <div class="flinks">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Security</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ====== Interactive demo ghost cursor ======
+const steps = document.querySelectorAll('.demo-step');
+const panels = document.querySelectorAll('.demo-canvas .panel');
+const ghost = document.getElementById('ghost');
+const targets = {1:{x:40,y:80}, 2:{x:60,y:170}, 3:{x:50,y:220}};
+
+function showStep(n){
+  steps.forEach(s=>s.classList.toggle('active', s.dataset.step===String(n)));
+  panels.forEach(p=>p.classList.toggle('on', p.dataset.panel===String(n)));
+  const t = targets[n] || {x:40,y:80};
+  ghost.style.left = t.x+'px';
+  ghost.style.top = t.y+'px';
+}
+steps.forEach(s=>{
+  s.addEventListener('mouseenter', ()=>showStep(s.dataset.step));
+  s.addEventListener('click', ()=>showStep(s.dataset.step));
+});
+// auto-cycle
+let auto = 1;
+setInterval(()=>{ auto = auto>=3 ? 1 : auto+1; showStep(auto); }, 4000);
+showStep(1);
+
+// ====== ROI calculator ======
+const spendSlider = document.getElementById('spendSlider');
+const teamSlider = document.getElementById('teamSlider');
+const spendVal = document.getElementById('spendVal');
+const teamVal = document.getElementById('teamVal');
+const savings = document.getElementById('savings');
+const hours = document.getElementById('hours');
+
+function fmtM(n){ return n>=10 ? n.toFixed(0)+'M' : n.toFixed(1)+'M'; }
+function fmtK(n){ return n>=1000 ? (n/1000).toFixed(1)+'M' : n+'K'; }
+
+function recalcROI(){
+  const s = parseFloat(spendSlider.value); // in millions
+  const t = parseFloat(teamSlider.value);
+  spendVal.textContent = '€ '+fmtM(s);
+  teamVal.textContent = t+' people';
+  const saveK = Math.round(s * 1000 * 0.18);
+  savings.textContent = fmtK(saveK);
+  hours.textContent = (t * 780).toLocaleString('en-US');
+}
+spendSlider.addEventListener('input', recalcROI);
+teamSlider.addEventListener('input', recalcROI);
+recalcROI();
+
+// ====== Closing form ======
+const fSteps = document.querySelectorAll('.form-step');
+function showFS(n){ fSteps.forEach(s=>s.classList.toggle('active', s.dataset.fs===String(n))); }
+document.querySelectorAll('.spend-opt').forEach(o=>{
+  o.addEventListener('click', ()=>{
+    document.querySelectorAll('.spend-opt').forEach(x=>x.classList.remove('sel'));
+    o.classList.add('sel');
+    setTimeout(()=>showFS(2), 250);
+  });
+});
+document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click', ()=>showFS(1)));
+document.getElementById('emailNext').addEventListener('click', ()=>{
+  const v = document.getElementById('emailIn').value.trim();
+  if(!v || !v.includes('@')) return;
+  showFS(3);
+});
+
+// smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); window.scrollTo({top:t.offsetTop-60, behavior:'smooth'}); }
+  });
+});
+</script>
+</body>
+</html>

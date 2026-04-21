@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ميمون — المشتريات، ببساطة.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#1E5631;
+    --teal:#4C9A8A;
+    --sky:#3A7CA5;
+    --slate:#5B7B99;
+    --mint:#7DBAAE;
+    --approved:#2A7B5E;
+    --pending:#D49A3E;
+    --refused:#B23A3A;
+    --bg:#FFFFFF;
+    --card:#F7F9F8;
+    --text:#111514;
+    --muted:#4A5753;
+    --line:#DDE3E0;
+    --line-soft:#EAEEEC;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Cairo','Inter',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;letter-spacing:0;line-height:1.7}
+  button,a.btn{font-family:inherit;color:inherit;cursor:pointer;background:none;border:none;padding:0;text-decoration:none}
+  a{text-decoration:none;color:inherit}
+
+  .container{max-width:1160px;margin:0 auto;padding:0 32px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--line-soft)}
+  header .container{display:flex;align-items:center;justify-content:space-between;padding-top:18px;padding-bottom:18px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo img{height:28px;display:block}
+  .nav-links{display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--muted)}
+  .nav-links a{transition:color .15s}
+  .nav-links a:hover{color:var(--text)}
+  @media (max-width:740px){.nav-links{display:none}}
+
+  /* Language switcher */
+  .lang-switcher{position:relative;display:flex;align-items:center}
+  .lang-trigger{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:1px solid transparent;font-family:'Inter',system-ui,sans-serif;letter-spacing:-0.01em;transition:all .15s;white-space:nowrap}
+  .lang-trigger:hover{color:var(--text);background:var(--card);border-color:var(--line-soft)}
+  .lang-trigger .globe-icon{flex-shrink:0;color:var(--teal)}
+  .lang-chevron{transition:transform .2s ease;flex-shrink:0;opacity:.6}
+  .lang-switcher.open .lang-chevron{transform:rotate(180deg)}
+  .lang-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;right:auto;background:#fff;border:1px solid var(--line-soft);border-radius:10px;box-shadow:0 8px 24px -4px rgba(17,21,20,.12),0 2px 6px -2px rgba(17,21,20,.06);padding:4px;min-width:76px;z-index:200}
+  .lang-switcher.open .lang-menu{display:block}
+  .lang-option{display:block;padding:7px 14px;font-size:11px;font-weight:500;color:var(--muted);border-radius:7px;transition:all .12s;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;text-decoration:none}
+  .lang-option:hover{color:var(--text);background:var(--card)}
+  .lang-option.lang-active{color:var(--brand);font-weight:700}
+  @media (max-width:640px){.lang-switcher{display:none}}
+
+  /* Buttons */
+  .btn{font-size:14px;font-weight:600;padding:10px 20px;border-radius:999px;border:1px solid transparent;transition:all .18s ease;letter-spacing:0;display:inline-flex;align-items:center;gap:8px;line-height:1.3}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:700}
+  .btn.primary:hover{background:#164625;transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,86,49,.22)}
+  .btn.ghost{border-color:var(--line);color:var(--text)}
+  .btn.ghost:hover{border-color:var(--text);background:var(--card)}
+  .btn.lg{font-size:15px;padding:14px 28px}
+
+  /* Hero */
+  .hero{padding:72px 0 96px;position:relative;overflow:hidden}
+  .hero .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+  @media (max-width:900px){.hero .grid{grid-template-columns:1fr;gap:48px}}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--brand);background:rgba(76,154,138,.1);border:1px solid rgba(76,154,138,.2);padding:5px 12px;border-radius:999px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;margin-bottom:28px;font-family:'JetBrains Mono',monospace}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  h1.hook{font-family:'Cairo',system-ui,sans-serif;font-weight:800;font-size:clamp(40px,6vw,72px);line-height:1.15;letter-spacing:0;margin:0 0 24px;color:var(--text)}
+  h1.hook em{font-style:normal;color:var(--brand);font-weight:800}
+  .sub{font-size:17px;color:var(--muted);max-width:540px;line-height:1.75;margin:0 0 36px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .cta-foot{margin-top:16px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
+
+  /* Hero UI preview */
+  .ui-preview{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px -30px rgba(17,21,20,.2),0 8px 24px -8px rgba(17,21,20,.08);padding:18px;overflow:hidden}
+  .ui-bar{display:flex;align-items:center;gap:6px;padding:0 4px 14px;border-bottom:1px solid var(--line-soft)}
+  .ui-bar i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+  .ui-title{margin-right:10px;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;direction:ltr}
+  .ui-body{padding:16px 4px 4px}
+  .ui-row{display:grid;grid-template-columns:80px 1fr 90px 80px;align-items:center;gap:12px;padding:10px 6px;border-bottom:1px solid var(--line-soft);font-size:12px;opacity:0;animation:rowIn .6s forwards}
+  .ui-row:nth-child(1){animation-delay:.1s}
+  .ui-row:nth-child(2){animation-delay:.25s}
+  .ui-row:nth-child(3){animation-delay:.4s}
+  .ui-row:nth-child(4){animation-delay:.55s}
+  @keyframes rowIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .ui-row .id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);direction:ltr}
+  .ui-row .nm{color:var(--text);font-weight:500;font-size:13px}
+  .ui-row .am{text-align:left;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);direction:ltr}
+  .ui-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:0;justify-self:start}
+  .ui-badge::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
+  .ui-badge.ok{background:rgba(42,123,94,.1);color:var(--approved)}
+  .ui-badge.pd{background:rgba(212,154,62,.12);color:var(--pending)}
+  .ui-badge.dr{background:rgba(91,123,153,.1);color:var(--slate)}
+  .ui-footer-note{margin-top:16px;padding:12px 14px;background:var(--card);border:1px solid var(--line-soft);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.65;font-style:normal}
+
+  /* Section shared */
+  section.block{padding:88px 0;border-top:1px solid var(--line-soft)}
+  .section-kicker{font-size:11px;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:14px;text-align:center;font-family:'JetBrains Mono',monospace}
+  .section-title{font-family:'Cairo',system-ui,sans-serif;font-weight:700;font-size:clamp(26px,3.8vw,44px);line-height:1.25;letter-spacing:0;text-align:center;margin:0 auto 16px;max-width:760px}
+  .section-title em{font-style:normal;color:var(--brand)}
+  .section-sub{font-size:15px;color:var(--muted);text-align:center;max-width:580px;margin:0 auto 56px;line-height:1.75}
+
+  /* Problem */
+  .problem-list{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:960px;margin:0 auto}
+  @media (max-width:820px){.problem-list{grid-template-columns:1fr}}
+  .problem-card{padding:28px 24px;border:1px solid var(--line-soft);border-radius:12px;background:#fff;transition:all .2s ease}
+  .problem-card:hover{border-color:var(--line);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(17,21,20,.08)}
+  .problem-card .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.1em;margin-bottom:10px;direction:ltr;display:inline-block}
+  .problem-card h3{font-family:'Cairo',system-ui,sans-serif;font-weight:700;font-size:18px;letter-spacing:0;margin:0 0 10px;color:var(--text)}
+  .problem-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.75}
+
+  /* Pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line-soft);border-radius:14px;overflow:hidden;max-width:1080px;margin:0 auto;border:1px solid var(--line-soft)}
+  @media (max-width:900px){.pillars{grid-template-columns:1fr}}
+  .pillar{background:#fff;padding:40px 32px;transition:background .2s ease}
+  .pillar:hover{background:var(--card)}
+  .pillar .icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;direction:ltr}
+  .pillar.p1 .icon{background:rgba(30,86,49,.08);color:var(--brand)}
+  .pillar.p2 .icon{background:rgba(58,124,165,.08);color:var(--sky)}
+  .pillar.p3 .icon{background:rgba(91,123,153,.1);color:var(--slate)}
+  .pillar h3{font-family:'Cairo',system-ui,sans-serif;font-weight:700;font-size:20px;letter-spacing:0;margin:0 0 12px}
+  .pillar p{font-size:14px;color:var(--muted);line-height:1.75;margin:0 0 20px}
+  .pillar .mini{font-size:11px;color:var(--text);font-family:'JetBrains Mono',monospace;padding:12px;background:var(--card);border-radius:8px;border:1px solid var(--line-soft);line-height:1.65;direction:ltr;text-align:left}
+  .pillar .mini .k{color:var(--muted)}
+  .pillar .mini .v{color:var(--text)}
+  .pillar .mini .g{color:var(--approved)}
+  .pillar .mini .s{color:var(--sky)}
+
+  /* Built for */
+  .pillar .icon.industry{font-size:14px;background:none;border:1px solid var(--line-soft)}
+
+  /* Dashboard showcase */
+  .dashboard-showcase{margin-top:60px;text-align:center;background:transparent}
+  .dashboard-showcase img{width:100%;max-width:1020px;display:block;margin:0 auto;background:transparent}
+  .dashboard-caption{margin-top:22px;font-size:14px;color:var(--muted);letter-spacing:0;line-height:1.75;text-align:center}
+  .dashboard-caption strong{color:var(--text);font-weight:700}
+
+  /* Interactive demo */
+  .demo-wrap{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:stretch}
+  @media (max-width:900px){.demo-wrap{grid-template-columns:1fr}}
+  .demo-steps{display:flex;flex-direction:column;gap:6px}
+  .demo-step{padding:18px 20px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .2s;opacity:.55}
+  .demo-step:hover{opacity:.85}
+  .demo-step.active{opacity:1;background:var(--card);border-color:var(--line-soft);box-shadow:inset -3px 0 0 var(--teal)}
+  .demo-step .sn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.08em;margin-bottom:4px;direction:ltr;display:inline-block}
+  .demo-step h4{margin:0 0 6px;font-size:15px;font-weight:700;color:var(--text);letter-spacing:0}
+  .demo-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.75}
+  .demo-canvas{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-height:320px;position:relative;box-shadow:0 16px 44px -20px rgba(17,21,20,.18)}
+  .ghost-cursor{position:absolute;width:14px;height:14px;border:2px solid var(--brand);border-radius:50%;pointer-events:none;transition:all .7s cubic-bezier(.6,.15,.2,1);z-index:3;background:rgba(255,255,255,.7)}
+  .ghost-cursor::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(76,154,138,.3);animation:pulse 1.4s infinite}
+  .demo-canvas .panel{opacity:0;transition:opacity .3s}
+  .demo-canvas .panel.on{opacity:1}
+  .demo-canvas .panel{position:absolute;inset:20px 22px;direction:rtl}
+  .demo-canvas h5{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin:0 0 16px;font-weight:600;font-family:'JetBrains Mono',monospace;direction:ltr;text-align:left}
+  .dc-field{padding:10px 12px;border:1px solid var(--line-soft);border-radius:8px;font-size:13px;margin-bottom:8px;background:var(--card)}
+  .dc-field .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;font-family:'JetBrains Mono',monospace;direction:ltr;display:block}
+  .dc-field .val{color:var(--text);font-weight:600}
+  .dc-field.focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(76,154,138,.08)}
+  .suggestion{margin-top:14px;padding:10px 12px;border-right:2px solid var(--teal);border-left:none;background:rgba(76,154,138,.05);font-size:13px;color:var(--text);border-radius:8px 0 0 8px}
+  .suggestion strong{color:var(--brand)}
+
+  /* Where we are */
+  .status-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;max-width:760px;margin:0 auto 48px}
+  @media (max-width:640px){.status-cols{grid-template-columns:1fr;gap:32px}}
+  .status-col h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:0 0 16px;direction:ltr;display:block}
+  .status-col ul{margin:0;padding:0;list-style:none}
+  .status-col ul li{font-size:14px;color:var(--muted);line-height:1.75;padding-right:16px;padding-left:0;position:relative}
+  .status-col ul li::before{content:"·";position:absolute;right:0;left:auto;color:var(--teal)}
+  .pull-quote{font-family:'Cairo',system-ui,sans-serif;font-style:normal;font-weight:400;font-size:19px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto;letter-spacing:0;line-height:1.7}
+
+  /* Closing CTA */
+  .closing{padding:110px 0;text-align:center;background:linear-gradient(180deg, #fff, var(--card))}
+  .closing h2{font-family:'Cairo',system-ui,sans-serif;font-weight:800;font-size:clamp(34px,5vw,56px);line-height:1.2;letter-spacing:0;max-width:720px;margin:0 auto 20px}
+  .closing h2 em{font-style:normal;color:var(--brand)}
+  .closing p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto 36px;line-height:1.75}
+  .closing-actions{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .closing-email{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;direction:ltr}
+  .closing-email a{color:var(--muted);transition:color .15s}
+  .closing-email a:hover{color:var(--text)}
+
+  /* Footer */
+  footer{padding:44px 0 32px;border-top:1px solid var(--line-soft);font-size:13px;color:var(--muted)}
+  footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+  footer .flinks{display:flex;gap:20px}
+  footer a{color:var(--muted);transition:color .15s}
+  footer a:hover{color:var(--text)}
+
+  /* Global transitions */
+  a,button{transition:transform .18s ease,color .18s ease,border-color .18s ease,background-color .18s ease}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">
+      <img src="assets/mimoun-logo.png" height="28" alt="Mimoun" />
+    </div>
+    <nav class="nav-links">
+      <a href="#pillars">المنتج</a>
+      <a href="#how">كيف يعمل</a>
+      <a href="#contact">اتصل بنا</a>
+    </nav>
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-trigger" onclick="toggleLang()" aria-haspopup="listbox" aria-expanded="false">
+        <svg class="globe-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span>AR</span>
+        <svg class="lang-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-menu" role="listbox">
+        <a href="index.html" class="lang-option">EN</a>
+        <a href="fr.html" class="lang-option">FR</a>
+        <a href="es.html" class="lang-option">ES</a>
+        <a href="ar.html" class="lang-option lang-active">AR</a>
+      </div>
+    </div>
+    <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">احجز عرضاً توضيحياً</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>PRE-SEED · CASABLANCA · 2026</div>
+      <h1 class="hook">المشتريات،<br><em>ببساطة.</em></h1>
+      <p class="sub">كل طلب مسجَّل. كل موافقة موجَّهة. كل أمر شراء صادر — بدون جداول بيانات.</p>
+      <div class="hero-cta">
+        <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">احجز عرضاً توضيحياً ←</a>
+        <a href="#how" class="btn ghost lg">كيف يعمل النظام</a>
+      </div>
+      <div class="cta-foot">20 MIN · NO CREDIT CARD</div>
+    </div>
+
+    <div class="ui-preview">
+      <div class="ui-bar"><i></i><i></i><i></i><span class="ui-title">mimoun.app / purchase-requests</span></div>
+      <div class="ui-body">
+        <div class="ui-row">
+          <div class="id">PR-0412</div>
+          <div class="nm">حديد تسليح 12mm (2t)</div>
+          <span class="ui-badge ok">موافق عليه</span>
+          <div class="am">48,200 MAD</div>
+        </div>
+        <div class="ui-row">
+          <div class="id">PR-0413</div>
+          <div class="nm">أنابيب مياه 50mm</div>
+          <span class="ui-badge pd">قيد الانتظار</span>
+          <div class="am">22,400 MAD</div>
+        </div>
+        <div class="ui-row">
+          <div class="id">PR-0414</div>
+          <div class="nm">تغليف، 500 وحدة</div>
+          <span class="ui-badge ok">موافق عليه</span>
+          <div class="am">8,900 MAD</div>
+        </div>
+        <div class="ui-row">
+          <div class="id">PR-0415</div>
+          <div class="nm">إسمنت CPJ-45</div>
+          <span class="ui-badge dr">مسودة</span>
+          <div class="am">31,000 MAD</div>
+        </div>
+        <div class="ui-footer-note">كل طلب يسير وفق نفس الهيكل.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="block">
+  <div class="container">
+    <div class="section-kicker">THE PROBLEM</div>
+    <h2 class="section-title">معظم الفرق تدير المشتريات <em>بالذاكرة.</em></h2>
+    <p class="section-sub">الطلبات تعيش في خيوط الدردشة. الموافقات تتم شفهياً. تتم تسوية الميزانيات في نهاية الشهر، إن تمت أصلاً.</p>
+    <div class="problem-list">
+      <div class="problem-card">
+        <div class="num">01</div>
+        <h3>طلبات ضائعة في المحادثات</h3>
+        <p>مشتريات حرجة مدفونة تحت الضوضاء التشغيلية. لا رقم مرجعي، لا تاريخ، لا محاسبة.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">02</div>
+        <h3>لا أثر للموافقات</h3>
+        <p>موافقات شفهية. لا تدقيق. مستحيل معرفة من وافق على ماذا.</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">03</div>
+        <h3>صفر رؤية على الإنفاق</h3>
+        <p>لا أحد يستطيع الإجابة على «أين ذهبت الميزانية؟» دون ماراثون من جداول البيانات.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="block" id="pillars">
+  <div class="container">
+    <div class="section-kicker">THE SOLUTION</div>
+    <h2 class="section-title">تدفق واحد. <em>من الطلب إلى أمر الشراء.</em></h2>
+    <p class="section-sub">يُهيكل ميمون كل طلب شراء، ويوجهه عبر الموافقات، ويُصدر أمر الشراء. يواصل فريقك العمل بالطريقة التي اعتاد عليها.</p>
+
+    <div class="pillars">
+      <div class="pillar p1">
+        <div class="icon">01</div>
+        <h3>تسجيل منظَّم</h3>
+        <p>كل طلب يصل مع الحقول التي تحتاجها: المادة، الكمية، المورد، الميزانية، الأولوية. كتابةً أو صوتاً أو صورةً.</p>
+        <div class="mini">
+          <div><span class="k">Requests this month</span> &nbsp; <span class="v">214</span></div>
+          <div><span class="k">Auto-structured</span> &nbsp; <span class="g">98%</span></div>
+          <div><span class="k">Missing fields</span> &nbsp; <span class="v">2 ↓</span></div>
+        </div>
+      </div>
+
+      <div class="pillar p2">
+        <div class="icon">02</div>
+        <h3>موافقات موجَّهة</h3>
+        <p>سلاسل موافقة تُعدّها مرة واحدة وتُطبَّق في كل مرة. إشعارات لا تضيع. قرار بنقرة واحدة مع سجل كامل.</p>
+        <div class="mini">
+          <div><span class="k">Avg. approval time</span> &nbsp; <span class="s">4m 12s</span></div>
+          <div><span class="k">Escalations</span> &nbsp; <span class="v">3</span></div>
+          <div><span class="k">Audit trail</span> &nbsp; <span class="g">complete</span></div>
+        </div>
+      </div>
+
+      <div class="pillar p3">
+        <div class="icon">03</div>
+        <h3>أوامر شراء تلقائية</h3>
+        <p>بمجرد الموافقة، يُصدَر أمر الشراء ويُرسَل إلى المورد ويُسجَّل. لا قوالب Word، لا بريد إلكتروني ضائع.</p>
+        <div class="mini">
+          <div><span class="k">POs issued</span> &nbsp; <span class="v">198</span></div>
+          <div><span class="k">Delivery rate</span> &nbsp; <span class="g">100%</span></div>
+          <div><span class="k">Supplier lead</span> &nbsp; <span class="s">6d avg</span></div>
+        </div>
+      </div>
+    </div>
+
+    <figure class="dashboard-showcase">
+      <img src="assets/dashboard_and_phone_linked.png" alt="لوحة تحكم ميمون متصلة بالهاتف عبر واتساب" />
+      <figcaption class="dashboard-caption"><strong>فرق الميدان والمشتريات المركزية متصلة فوراً</strong> — كل ذلك عبر واتساب.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section class="block" id="how">
+  <div class="container">
+    <div class="section-kicker">SEE IT IN ACTION</div>
+    <h2 class="section-title">من الطلب إلى أمر الشراء في <em>أقل من دقيقة.</em></h2>
+    <p class="section-sub">مرر المؤشر أو اضغط على خطوة لترى كيف ينتقل ميمون من التسجيل إلى الطلب المؤكَّد.</p>
+
+    <div class="demo-wrap">
+      <div class="demo-steps">
+        <div class="demo-step active" data-step="1">
+          <div class="sn">STEP 01</div>
+          <h4>تسجيل الطلب</h4>
+          <p>يصف أحد أعضاء الفريق ما يحتاجه. تُستخرج الحقول تلقائياً — دون نماذج لملئها.</p>
+        </div>
+        <div class="demo-step" data-step="2">
+          <div class="sn">STEP 02</div>
+          <h4>توجيه الموافقة</h4>
+          <p>يُطبّق ميمون سياسة الموافقة الخاصة بك ويُخطر الشخص المناسب. نقرة واحدة، سجل كامل.</p>
+        </div>
+        <div class="demo-step" data-step="3">
+          <div class="sn">STEP 03</div>
+          <h4>إصدار أمر الشراء</h4>
+          <p>تم استلام الموافقة. تم إنشاء أمر الشراء وإرساله إلى المورد وتسجيله في لوحة التحكم.</p>
+        </div>
+      </div>
+
+      <div class="demo-canvas">
+        <div class="ghost-cursor" id="ghost"></div>
+
+        <div class="panel on" data-panel="1">
+          <h5>New request</h5>
+          <div class="dc-field focus"><div class="lbl">ITEM</div><div class="val">حديد تسليح 12mm، 2 أطنان</div></div>
+          <div class="dc-field"><div class="lbl">SUPPLIER</div><div class="val">Atlas Metalworks</div></div>
+          <div class="dc-field"><div class="lbl">BUDGET</div><div class="val">48,000 MAD</div></div>
+          <div class="suggestion"><strong>ميمون:</strong> الطلب منظَّم. إرساله إلى المعتمِد؟</div>
+        </div>
+
+        <div class="panel" data-panel="2">
+          <h5>Approval · pending</h5>
+          <div class="dc-field"><div class="lbl">POLICY</div><div class="val">مواد · أكثر من 30k MAD</div></div>
+          <div class="dc-field"><div class="lbl">APPROVER</div><div class="val">م. صباعي · مدير العمليات</div></div>
+          <div class="dc-field focus"><div class="lbl">STATUS</div><div class="val">في انتظار القرار · 1m 08s</div></div>
+          <div class="suggestion"><strong>ميمون:</strong> تم إخطار المعتمِد. في انتظار الرد.</div>
+        </div>
+
+        <div class="panel" data-panel="3">
+          <h5>PO issued</h5>
+          <div class="dc-field"><div class="lbl">PO NUMBER</div><div class="val">PO-2026-0412</div></div>
+          <div class="dc-field"><div class="lbl">SENT TO</div><div class="val">contact@atlas-metal.ma</div></div>
+          <div class="dc-field focus"><div class="lbl">STATUS</div><div class="val" style="color:var(--approved)">✓ تم التأكيد من المورد</div></div>
+          <div class="suggestion"><strong>ميمون:</strong> تم تسجيل أمر الشراء. مهلة التسليم 6 أيام.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILT FOR -->
+<section class="block" style="background:var(--card)">
+  <div class="container">
+    <div class="section-kicker">BUILT FOR</div>
+    <h2 class="section-title">الفرق التي تُجري عمليات الشراء <em>كل يوم.</em></h2>
+    <p class="section-sub">الشركات ذات الكثافة التشغيلية العالية حيث الطلبات تفوق أدوات إدارتها.</p>
+
+    <div class="pillars">
+      <div class="pillar p1">
+        <div class="icon">BTP</div>
+        <h3>قطاع البناء والأشغال</h3>
+        <p>مواد البناء، استئجار المعدات، خدمات المقاولين من الباطن — مُتتبَّعة بالموقع والسطر.</p>
+      </div>
+      <div class="pillar p2">
+        <div class="icon">H&amp;R</div>
+        <h3>الضيافة</h3>
+        <p>طلبات المأكولات والمشروبات، مستلزمات التدبير المنزلي، طلبات الصيانة — تدفق واحد عبر الأقسام.</p>
+      </div>
+      <div class="pillar p3">
+        <div class="icon">IND</div>
+        <h3>التصنيع</h3>
+        <p>المواد الخام، التغليف، الإنفاق غير المباشر — منظَّم، معتمَد، قابل للتدقيق.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE WE ARE -->
+<section class="block">
+  <div class="container">
+    <div class="section-kicker">WHERE WE ARE</div>
+    <h2 class="section-title">مرحلة ما قبل التمويل. <em>منتج جاهز.</em> برامج تجريبية مفتوحة.</h2>
+    <p class="section-sub">لا توجد آراء عملاء بعد. فقط منتج يعمل وباب مفتوح.</p>
+
+    <div class="status-cols">
+      <div class="status-col">
+        <h4>DONE</h4>
+        <ul>
+          <li>MVP جاهز — تسجيل الطلبات، الموافقات، إصدار أوامر الشراء</li>
+          <li>متعدد اللغات — الفرنسية، العربية، الدارجة</li>
+          <li>بيئات عرض توضيحي للبناء والضيافة</li>
+        </ul>
+      </div>
+      <div class="status-col">
+        <h4>IN PROGRESS</h4>
+        <ul>
+          <li>أولى محادثات البرنامج التجريبي</li>
+          <li>مقابلات مع متخصصي المشتريات</li>
+          <li>الهدف التالي: خمسة عملاء تجريبيين خلال ستة أشهر</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="pull-quote">«نحن نفضّل أن نريك المنتج على شريحة تضم شعارات وهمية.»</p>
+  </div>
+</section>
+
+<!-- CLOSING CTA -->
+<section class="closing" id="contact">
+  <div class="container">
+    <h2>عشرون دقيقة. <em>بدون عروض.</em></h2>
+    <p>مكالمة مدتها 20 دقيقة. نستعرض المنتج مع حالة الاستخدام الخاصة بك — بدون pitch deck.</p>
+    <div class="closing-actions">
+      <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">احجز عرضاً توضيحياً ←</a>
+      <div class="closing-email">OR EMAIL — <a href="mailto:contact@mimoun.co">CONTACT@MIMOUN.CO</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div>© 2026 ميمون · الدار البيضاء، المغرب</div>
+    <div class="flinks">
+      <a href="#">الخصوصية</a>
+      <a href="#">الشروط</a>
+      <a href="mailto:contact@mimoun.co">اتصل بنا</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// --- Demo step animation (deterministic: 1→2→3→1, 2.5s per step) ---
+const steps = document.querySelectorAll('.demo-step');
+const panels = document.querySelectorAll('.demo-canvas .panel');
+const ghost = document.getElementById('ghost');
+const targets = {1:{x:40,y:60}, 2:{x:60,y:140}, 3:{x:50,y:190}};
+let current = 1;
+let autoTimer = null;
+
+function showStep(n){
+  current = n;
+  steps.forEach(s => s.classList.toggle('active', s.dataset.step === String(n)));
+  panels.forEach(p => p.classList.toggle('on', p.dataset.panel === String(n)));
+  const t = targets[n] || {x:40, y:60};
+  ghost.style.left = t.x + 'px';
+  ghost.style.top  = t.y + 'px';
+}
+
+function advance(){ showStep(current >= 3 ? 1 : current + 1); }
+
+function startAuto(){
+  clearInterval(autoTimer);
+  autoTimer = setInterval(advance, 2500);
+}
+
+steps.forEach(s => {
+  s.addEventListener('mouseenter', () => { showStep(Number(s.dataset.step)); startAuto(); });
+  s.addEventListener('click',      () => { showStep(Number(s.dataset.step)); startAuto(); });
+});
+
+showStep(1);
+startAuto();
+
+// --- Language switcher dropdown ---
+function toggleLang(){
+  const sw  = document.getElementById('langSwitcher');
+  const btn = sw.querySelector('.lang-trigger');
+  const open = sw.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(open));
+}
+document.addEventListener('click', e => {
+  const sw = document.getElementById('langSwitcher');
+  if(sw && !sw.contains(e.target)) sw.classList.remove('open');
+});
+
+// --- Smooth scroll ---
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); window.scrollTo({top: t.offsetTop - 60, behavior:'smooth'}); }
+  });
+});
+</script>
+</body>
+</html>

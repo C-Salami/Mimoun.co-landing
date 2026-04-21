@@ -6,7 +6,7 @@
 <title>Mimoun — Procurement, simplified.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,144,300..500;1,144,300..400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --brand:#1E5631;
@@ -25,7 +25,7 @@
     --line-soft:#EAEEEC;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-weight:430;-webkit-font-smoothing:antialiased;letter-spacing:-0.005em;line-height:1.5}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;letter-spacing:-0.012em;line-height:1.65}
   button,a.btn{font-family:inherit;color:inherit;cursor:pointer;background:none;border:none;padding:0;text-decoration:none}
   a{text-decoration:none;color:inherit}
 
@@ -36,14 +36,28 @@
   header .container{display:flex;align-items:center;justify-content:space-between;padding-top:18px;padding-bottom:18px}
   .logo{display:flex;align-items:center;gap:10px}
   .logo img{height:28px;display:block}
-  .nav-links{display:flex;gap:28px;font-size:13px;color:var(--muted)}
+  .nav-links{display:flex;gap:28px;font-size:13px;font-weight:500;color:var(--muted)}
   .nav-links a{transition:color .15s}
   .nav-links a:hover{color:var(--text)}
   @media (max-width:740px){.nav-links{display:none}}
 
+  /* Language switcher */
+  .lang-switcher{position:relative;display:flex;align-items:center}
+  .lang-trigger{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:8px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:1px solid transparent;font-family:'Inter',system-ui,sans-serif;letter-spacing:-0.01em;transition:all .15s;white-space:nowrap}
+  .lang-trigger:hover{color:var(--text);background:var(--card);border-color:var(--line-soft)}
+  .lang-trigger .globe-icon{flex-shrink:0;color:var(--teal)}
+  .lang-chevron{transition:transform .2s ease;flex-shrink:0;opacity:.6}
+  .lang-switcher.open .lang-chevron{transform:rotate(180deg)}
+  .lang-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid var(--line-soft);border-radius:10px;box-shadow:0 8px 24px -4px rgba(17,21,20,.12),0 2px 6px -2px rgba(17,21,20,.06);padding:4px;min-width:76px;z-index:200}
+  .lang-switcher.open .lang-menu{display:block}
+  .lang-option{display:block;padding:7px 14px;font-size:11px;font-weight:500;color:var(--muted);border-radius:7px;transition:all .12s;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;text-decoration:none}
+  .lang-option:hover{color:var(--text);background:var(--card)}
+  .lang-option.lang-active{color:var(--brand);font-weight:700}
+  @media (max-width:640px){.lang-switcher{display:none}}
+
   /* Buttons */
-  .btn{font-size:13px;font-weight:500;padding:10px 20px;border-radius:999px;border:1px solid transparent;transition:all .18s ease;letter-spacing:.005em;display:inline-flex;align-items:center;gap:8px;line-height:1.2}
-  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn{font-size:13px;font-weight:500;padding:10px 20px;border-radius:999px;border:1px solid transparent;transition:all .18s ease;letter-spacing:0;display:inline-flex;align-items:center;gap:8px;line-height:1.2}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600}
   .btn.primary:hover{background:#164625;transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,86,49,.22)}
   .btn.ghost{border-color:var(--line);color:var(--text)}
   .btn.ghost:hover{border-color:var(--text);background:var(--card)}
@@ -56,9 +70,9 @@
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--brand);background:rgba(76,154,138,.1);border:1px solid rgba(76,154,138,.2);padding:5px 12px;border-radius:999px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;margin-bottom:28px}
   .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  h1.hook{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(40px,5.8vw,72px);line-height:1.03;letter-spacing:-0.035em;margin:0 0 24px;color:var(--text)}
-  h1.hook em{font-style:italic;color:var(--brand);font-weight:400}
-  .sub{font-size:17px;color:var(--muted);max-width:540px;line-height:1.55;margin:0 0 36px}
+  h1.hook{font-family:'Inter',system-ui,sans-serif;font-weight:800;font-size:clamp(42px,6vw,76px);line-height:1.0;letter-spacing:-0.04em;margin:0 0 24px;color:var(--text)}
+  h1.hook em{font-style:italic;color:var(--brand);font-weight:800}
+  .sub{font-size:17px;color:var(--muted);max-width:540px;line-height:1.68;margin:0 0 36px}
   .hero-cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
   .cta-foot{margin-top:16px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
 
@@ -82,14 +96,14 @@
   .ui-badge.ok{background:rgba(42,123,94,.1);color:var(--approved)}
   .ui-badge.pd{background:rgba(212,154,62,.12);color:var(--pending)}
   .ui-badge.dr{background:rgba(91,123,153,.1);color:var(--slate)}
-  .ui-footer-note{margin-top:16px;padding:12px 14px;background:var(--card);border:1px solid var(--line-soft);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.5;font-style:italic}
+  .ui-footer-note{margin-top:16px;padding:12px 14px;background:var(--card);border:1px solid var(--line-soft);border-radius:10px;font-size:12px;color:var(--muted);line-height:1.65;font-style:italic}
 
   /* Section shared */
   section.block{padding:88px 0;border-top:1px solid var(--line-soft)}
   .section-kicker{font-size:11px;color:var(--teal);letter-spacing:.16em;text-transform:uppercase;font-weight:500;margin-bottom:14px;text-align:center}
-  .section-title{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(30px,3.8vw,46px);line-height:1.1;letter-spacing:-0.02em;text-align:center;margin:0 auto 16px;max-width:760px}
+  .section-title{font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:clamp(28px,3.8vw,46px);line-height:1.08;letter-spacing:-0.03em;text-align:center;margin:0 auto 16px;max-width:760px}
   .section-title em{font-style:italic;color:var(--brand)}
-  .section-sub{font-size:15px;color:var(--muted);text-align:center;max-width:580px;margin:0 auto 56px;line-height:1.55}
+  .section-sub{font-size:15px;color:var(--muted);text-align:center;max-width:580px;margin:0 auto 56px;line-height:1.68}
 
   /* Problem */
   .problem-list{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:960px;margin:0 auto}
@@ -97,8 +111,8 @@
   .problem-card{padding:28px 24px;border:1px solid var(--line-soft);border-radius:12px;background:#fff;transition:all .2s ease}
   .problem-card:hover{border-color:var(--line);transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(17,21,20,.08)}
   .problem-card .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.1em;margin-bottom:10px}
-  .problem-card h3{font-family:'Fraunces',serif;font-weight:400;font-size:20px;letter-spacing:-0.01em;margin:0 0 10px;color:var(--text)}
-  .problem-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.6}
+  .problem-card h3{font-family:'Inter',system-ui,sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.022em;margin:0 0 10px;color:var(--text)}
+  .problem-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.68}
 
   /* Pillars */
   .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line-soft);border-radius:14px;overflow:hidden;max-width:1080px;margin:0 auto;border:1px solid var(--line-soft)}
@@ -109,13 +123,19 @@
   .pillar.p1 .icon{background:rgba(30,86,49,.08);color:var(--brand)}
   .pillar.p2 .icon{background:rgba(58,124,165,.08);color:var(--sky)}
   .pillar.p3 .icon{background:rgba(91,123,153,.1);color:var(--slate)}
-  .pillar h3{font-family:'Fraunces',serif;font-weight:400;font-size:22px;letter-spacing:-0.01em;margin:0 0 12px}
-  .pillar p{font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 20px}
-  .pillar .mini{font-size:11px;color:var(--text);font-family:'JetBrains Mono',monospace;padding:12px;background:var(--card);border-radius:8px;border:1px solid var(--line-soft);line-height:1.6}
+  .pillar h3{font-family:'Inter',system-ui,sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.022em;margin:0 0 12px}
+  .pillar p{font-size:14px;color:var(--muted);line-height:1.68;margin:0 0 20px}
+  .pillar .mini{font-size:11px;color:var(--text);font-family:'JetBrains Mono',monospace;padding:12px;background:var(--card);border-radius:8px;border:1px solid var(--line-soft);line-height:1.65}
   .pillar .mini .k{color:var(--muted)}
   .pillar .mini .v{color:var(--text)}
   .pillar .mini .g{color:var(--approved)}
   .pillar .mini .s{color:var(--sky)}
+
+  /* Dashboard showcase */
+  .dashboard-showcase{margin-top:60px;text-align:center;background:transparent}
+  .dashboard-showcase img{width:100%;max-width:1020px;display:block;margin:0 auto;background:transparent}
+  .dashboard-caption{margin-top:22px;font-size:14px;color:var(--muted);letter-spacing:-0.008em;line-height:1.65;font-style:italic;text-align:center}
+  .dashboard-caption strong{font-style:normal;color:var(--text);font-weight:600}
 
   /* Built for (same pillars grid, no mini blocks) */
   .pillar .icon.industry{font-size:14px;background:none;border:1px solid var(--line-soft)}
@@ -128,8 +148,8 @@
   .demo-step:hover{opacity:.85}
   .demo-step.active{opacity:1;background:var(--card);border-color:var(--line-soft);box-shadow:inset 3px 0 0 var(--teal)}
   .demo-step .sn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:.08em;margin-bottom:4px}
-  .demo-step h4{margin:0 0 6px;font-size:15px;font-weight:500;color:var(--text);letter-spacing:-0.005em}
-  .demo-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.55}
+  .demo-step h4{margin:0 0 6px;font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.02em}
+  .demo-step p{margin:0;font-size:13px;color:var(--muted);line-height:1.68}
   .demo-canvas{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;min-height:320px;position:relative;box-shadow:0 16px 44px -20px rgba(17,21,20,.18)}
   .ghost-cursor{position:absolute;width:14px;height:14px;border:2px solid var(--brand);border-radius:50%;pointer-events:none;transition:all .7s cubic-bezier(.6,.15,.2,1);z-index:3;background:rgba(255,255,255,.7)}
   .ghost-cursor::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(76,154,138,.3);animation:pulse 1.4s infinite}
@@ -149,15 +169,15 @@
   @media (max-width:640px){.status-cols{grid-template-columns:1fr;gap:32px}}
   .status-col h4{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 16px}
   .status-col ul{margin:0;padding:0;list-style:none}
-  .status-col ul li{font-size:14px;color:var(--muted);line-height:1.7;padding-left:16px;position:relative}
+  .status-col ul li{font-size:14px;color:var(--muted);line-height:1.68;padding-left:16px;position:relative}
   .status-col ul li::before{content:"·";position:absolute;left:0;color:var(--teal)}
-  .pull-quote{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:20px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto;letter-spacing:-0.01em}
+  .pull-quote{font-family:'Inter',system-ui,sans-serif;font-style:italic;font-weight:400;font-size:19px;color:var(--muted);text-align:center;max-width:520px;margin:0 auto;letter-spacing:-0.02em}
 
   /* Closing CTA */
   .closing{padding:110px 0;text-align:center;background:linear-gradient(180deg, #fff, var(--card))}
-  .closing h2{font-family:'Fraunces',serif;font-weight:300;font-size:clamp(36px,5vw,58px);line-height:1.05;letter-spacing:-0.025em;max-width:720px;margin:0 auto 20px}
+  .closing h2{font-family:'Inter',system-ui,sans-serif;font-weight:800;font-size:clamp(36px,5vw,58px);line-height:1.02;letter-spacing:-0.04em;max-width:720px;margin:0 auto 20px}
   .closing h2 em{font-style:italic;color:var(--brand)}
-  .closing p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto 36px;line-height:1.55}
+  .closing p{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto 36px;line-height:1.68}
   .closing-actions{display:flex;flex-direction:column;align-items:center;gap:16px}
   .closing-email{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
   .closing-email a{color:var(--muted);transition:color .15s}
@@ -186,7 +206,20 @@
       <a href="#how">How it works</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary">Book a demo</a>
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-trigger" onclick="toggleLang()" aria-haspopup="listbox" aria-expanded="false">
+        <svg class="globe-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span>EN</span>
+        <svg class="lang-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-menu" role="listbox">
+        <a href="index.html" class="lang-option lang-active">EN</a>
+        <a href="fr.html" class="lang-option">FR</a>
+        <a href="es.html" class="lang-option">ES</a>
+        <a href="ar.html" class="lang-option">AR</a>
+      </div>
+    </div>
+    <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">Book a demo</a>
   </div>
 </header>
 
@@ -196,7 +229,7 @@
     <div>
       <div class="eyebrow"><span class="dot"></span>PRE-SEED · CASABLANCA · 2026</div>
       <h1 class="hook">Procurement,<br><em>simplified.</em></h1>
-      <p class="sub">Turn everyday purchasing chaos into a structured, auditable flow. Every request captured, every approval routed, every purchase order issued — without the spreadsheet marathon.</p>
+      <p class="sub">Every request captured. Every approval routed. Every PO issued — without the spreadsheet.</p>
       <div class="hero-cta">
         <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">Book a demo →</a>
         <a href="#how" class="btn ghost lg">See how it works</a>
@@ -215,7 +248,7 @@
         </div>
         <div class="ui-row">
           <div class="id">PR-0413</div>
-          <div class="nm">Argan oil, raw</div>
+          <div class="nm">Water tubes 50mm</div>
           <span class="ui-badge pd">Pending</span>
           <div class="am">22,400 MAD</div>
         </div>
@@ -304,6 +337,11 @@
         </div>
       </div>
     </div>
+
+    <figure class="dashboard-showcase">
+      <img src="assets/dashboard_and_phone_linked.png" alt="Mimoun dashboard connected to mobile via WhatsApp" />
+      <figcaption class="dashboard-caption"><strong>Field teams and central procurement connected instantly</strong> — all through WhatsApp.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -396,7 +434,7 @@
   <div class="container">
     <div class="section-kicker">WHERE WE ARE</div>
     <h2 class="section-title">Pre-seed. <em>Working product.</em> Pilots open.</h2>
-    <p class="section-sub">We're being transparent: no customer reviews to show yet. What we have is a working product and an open door.</p>
+    <p class="section-sub">No customer reviews yet. Just a working product and an open door.</p>
 
     <div class="status-cols">
       <div class="status-col">
@@ -425,7 +463,7 @@
 <section class="closing" id="contact">
   <div class="container">
     <h2>Twenty minutes. <em>No slides.</em></h2>
-    <p>The fastest way to see if Mimoun fits is a short call where we walk through the product with your own use case in mind.</p>
+    <p>A 20-minute call. We walk through the product with your use case — no pitch deck.</p>
     <div class="closing-actions">
       <a href="https://calendly.com/contact-mimoun" target="_blank" class="btn primary lg">Book a demo →</a>
       <div class="closing-email">OR EMAIL — <a href="mailto:contact@mimoun.co">CONTACT@MIMOUN.CO</a></div>
@@ -446,30 +484,53 @@
 </footer>
 
 <script>
-// Interactive demo ghost cursor
+// --- Demo step animation (deterministic: 1→2→3→1, 2.5s per step) ---
 const steps = document.querySelectorAll('.demo-step');
 const panels = document.querySelectorAll('.demo-canvas .panel');
 const ghost = document.getElementById('ghost');
 const targets = {1:{x:40,y:60}, 2:{x:60,y:140}, 3:{x:50,y:190}};
+let current = 1;
+let autoTimer = null;
 
 function showStep(n){
-  steps.forEach(s=>s.classList.toggle('active', s.dataset.step===String(n)));
-  panels.forEach(p=>p.classList.toggle('on', p.dataset.panel===String(n)));
-  const t = targets[n] || {x:40,y:60};
-  ghost.style.left = t.x+'px';
-  ghost.style.top = t.y+'px';
+  current = n;
+  steps.forEach(s => s.classList.toggle('active', s.dataset.step === String(n)));
+  panels.forEach(p => p.classList.toggle('on', p.dataset.panel === String(n)));
+  const t = targets[n] || {x:40, y:60};
+  ghost.style.left = t.x + 'px';
+  ghost.style.top  = t.y + 'px';
 }
-steps.forEach(s=>{
-  s.addEventListener('mouseenter', ()=>showStep(Number(s.dataset.step)));
-  s.addEventListener('click', ()=>showStep(Number(s.dataset.step)));
-});
-let auto = 1;
-setInterval(()=>{ auto = auto >= 3 ? 1 : auto + 1; showStep(auto); }, 4000);
-showStep(1);
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', e=>{
+function advance(){ showStep(current >= 3 ? 1 : current + 1); }
+
+function startAuto(){
+  clearInterval(autoTimer);
+  autoTimer = setInterval(advance, 2500);
+}
+
+steps.forEach(s => {
+  s.addEventListener('mouseenter', () => { showStep(Number(s.dataset.step)); startAuto(); });
+  s.addEventListener('click',      () => { showStep(Number(s.dataset.step)); startAuto(); });
+});
+
+showStep(1);
+startAuto();
+
+// --- Language switcher dropdown ---
+function toggleLang(){
+  const sw  = document.getElementById('langSwitcher');
+  const btn = sw.querySelector('.lang-trigger');
+  const open = sw.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(open));
+}
+document.addEventListener('click', e => {
+  const sw = document.getElementById('langSwitcher');
+  if(sw && !sw.contains(e.target)) sw.classList.remove('open');
+});
+
+// --- Smooth scroll ---
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
     const t = document.querySelector(a.getAttribute('href'));
     if(t){ e.preventDefault(); window.scrollTo({top: t.offsetTop - 60, behavior:'smooth'}); }
   });
